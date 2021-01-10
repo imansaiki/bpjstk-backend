@@ -14,9 +14,6 @@
 	<name>monitor</name>
 	<description>Monitoring Apps for bpjstk</description>
 
-	<properties>
-		<java.version>11</java.version>
-	</properties>
 
 	<dependencies>
 		<dependency>
@@ -31,7 +28,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
