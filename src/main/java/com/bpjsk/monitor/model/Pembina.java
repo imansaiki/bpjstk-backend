@@ -16,7 +16,7 @@ public class Pembina {
     @Column(unique=true,name = "nik")
     private String nik;
 
-    @Column(name = "kode_pembina")
+    @Column(unique=true,name = "kode_pembina")
     private String kodePembina;
 
     @Column(name = "nama")

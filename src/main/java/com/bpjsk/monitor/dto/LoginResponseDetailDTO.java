@@ -1,4 +1,4 @@
-package com.bpjsk.monitor.DTO;
+package com.bpjsk.monitor.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,6 +10,8 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginResponseDetailDTO {
+    String name;
+    String username;
     String token;
     String role;
     Date loginTime;

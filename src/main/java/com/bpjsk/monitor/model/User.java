@@ -20,9 +20,6 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "level")
-    private String level;
-
     @Column(name = "is_active")
     private Integer isActive;
 
