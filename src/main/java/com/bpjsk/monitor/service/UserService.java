@@ -44,8 +44,20 @@ public class UserService implements UserDetailsService {
         return new UserPrincipal(user);
     }
 
-    public void registerUser(RegisterObject registerObject) throws Exception {
-        if (registerObject.getRoleId()==null||
+    public void registerPembina(RegisterObject registerObject) throws Exception {
+        if (registerObject.getUsername()==null||
+                registerObject.getPassword()==null
+        ){
+            throw new Exception("Lengkapi field yang diminta");
+        }
+        String password = passwordEncoder.encode(registerObject.getPassword());
+        registerObject.setPassword(password);
+        registerObject.setRoleId(1);
+        userRepository.save(registerObject.getUser());
+        //pembinaRepository.save(registerObject.getPembina());
+    }
+    public void registerAdmin(RegisterObject registerObject) throws Exception {
+        if (
                 registerObject.getNik()==null||
                 registerObject.getPassword()==null||
                 registerObject.getNama()==null
@@ -54,6 +66,8 @@ public class UserService implements UserDetailsService {
         }
         String password = passwordEncoder.encode(registerObject.getPassword());
         registerObject.setPassword(password);
+        registerObject.setRoleId(2);
+        registerObject.setUsername(registerObject.getNik());
         userRepository.save(registerObject.getUser());
         pembinaRepository.save(registerObject.getPembina());
     }

@@ -55,7 +55,22 @@ public class UserAPI {
         HashMap response = new HashMap<String,Object>();
         response.put("message","Register Success");
         try {
-            userService.registerUser(registerObject);
+            userService.registerPembina(registerObject);
+        }catch (DataIntegrityViolationException e){
+            response.put("message","Register gagal, username telah digunakan");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }catch (Exception e){
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+    @RequestMapping(value="/registerAdmin", method= RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> registerAdmin(@RequestBody RegisterObject registerObject) {
+        HashMap response = new HashMap<String,Object>();
+        response.put("message","Register Success");
+        try {
+            userService.registerAdmin(registerObject);
         }catch (DataIntegrityViolationException e){
             response.put("message","Register gagal, username telah digunakan");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);

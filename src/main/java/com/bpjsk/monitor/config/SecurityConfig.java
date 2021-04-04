@@ -42,8 +42,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // Exception queryBanner
                 //.antMatchers(HttpMethod.GET, "/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/user/register").permitAll()
+                .antMatchers(HttpMethod.POST, "/user/registerAdmin").permitAll()
                 .antMatchers(HttpMethod.POST, "/user/signin").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/test").permitAll()
+                .antMatchers(HttpMethod.POST, "/perusahaan/save").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/surat/save").hasAnyRole("ADMIN")
+                //.antMatchers(HttpMethod.GET, "/api/test").permitAll()
                 // Disallow everything else..
                 .anyRequest().authenticated();
 

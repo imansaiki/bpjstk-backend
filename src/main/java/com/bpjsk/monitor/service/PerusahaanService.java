@@ -53,7 +53,11 @@ public class PerusahaanService {
     }
 
     public void save(Perusahaan perusahaan) throws Exception {
-        Pembina pembina = pembinaRepository.findByKodePembina(perusahaan.getKodePembina());
+        Pembina pembina = null;
+        if(perusahaan.getKodePembina()!=null){
+            pembina= pembinaRepository.findByKodePembina(perusahaan.getKodePembina());
+        }
+
         if (pembina==null){
             throw new Exception("Pembina not found");
         }
