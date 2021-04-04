@@ -2,11 +2,14 @@ package com.bpjsk.monitor.service;
 
 import com.bpjsk.monitor.model.Pembina;
 import com.bpjsk.monitor.repository.PembinaRepository;
+import com.bpjsk.monitor.requestobject.PembinaReqObj;
+import com.bpjsk.monitor.specification.PembinaSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,9 +17,31 @@ public class PembinaService {
     @Autowired
     PembinaRepository pembinaRepository;
 
-    public Page<Pembina> getAll(Integer start, Integer size, String sort, String sortBy, String nama, String kodePembina, String kota) {
-        Pageable pageable = PageRequest.of(start,size, sort.isEmpty() || sort.equalsIgnoreCase("asc")? Sort.Direction.ASC : Sort.Direction.DESC, sortBy.isEmpty()?"id":sortBy);
-        Page<Pembina> pembinaPage = pembinaRepository.findAll(pageable);
-        return pembinaPage;
+    public Page<Pembina> getAll(PembinaReqObj pembinaReqObj) {
+        Sort.Direction sort = Sort.Direction.ASC;
+        if (pembinaReqObj.getSort()!=null){
+            if (pembinaReqObj.getSort().equalsIgnoreCase("DESC")){
+                sort = Sort.Direction.DESC;
+            }
+        }
+        Pageable pageable = PageRequest.of(pembinaReqObj.getPage()!=null? pembinaReqObj.getPage() : 0,pembinaReqObj.getSize()!=null? pembinaReqObj.getSize() : 0,sort, pembinaReqObj.getSortBy());
+
+        Specification<Pembina> specification = Specification.where(null);
+        if(pembinaReqObj.getKotaLk()!=null){
+            specification= specification.and(new PembinaSpecification("kota","like", pembinaReqObj.getKotaLk()));
+        }
+        if(pembinaReqObj.getNikLk()!=null){
+            specification= specification.and(new PembinaSpecification("nik","like", pembinaReqObj.getNikLk()));
+        }
+        if(pembinaReqObj.getKodePembinaLk()!=null){
+            specification= specification.and(new PembinaSpecification("kodePembina","like", pembinaReqObj.getKodePembinaLk()));
+        }
+        if(pembinaReqObj.getEmailLk()!=null){
+            specification= specification.and(new PembinaSpecification("email","like", pembinaReqObj.getEmailLk()));
+        }
+        if(pembinaReqObj.getTeleponLk()!=null){
+            specification= specification.and(new PembinaSpecification("telepon","like", pembinaReqObj.getTeleponLk()));
+        }
+        return pembinaRepository.findAll(specification,pageable);
     }
 }

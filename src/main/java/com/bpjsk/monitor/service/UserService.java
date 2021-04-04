@@ -44,8 +44,14 @@ public class UserService implements UserDetailsService {
         return new UserPrincipal(user);
     }
 
-    public void registerUser(RegisterObject registerObject) {
-
+    public void registerUser(RegisterObject registerObject) throws Exception {
+        if (registerObject.getRoleId()==null||
+                registerObject.getNik()==null||
+                registerObject.getPassword()==null||
+                registerObject.getNama()==null
+        ){
+            throw new Exception("Lengkapi field yang diminta");
+        }
         String password = passwordEncoder.encode(registerObject.getPassword());
         registerObject.setPassword(password);
         userRepository.save(registerObject.getUser());

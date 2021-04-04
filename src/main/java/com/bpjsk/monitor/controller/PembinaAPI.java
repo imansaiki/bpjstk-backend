@@ -1,6 +1,7 @@
 package com.bpjsk.monitor.controller;
 
 import com.bpjsk.monitor.model.Pembina;
+import com.bpjsk.monitor.requestobject.PembinaReqObj;
 import com.bpjsk.monitor.service.PembinaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,13 +27,10 @@ public class PembinaAPI {
     PembinaService pembinaService;
 
     @RequestMapping(value="/getAll", method= RequestMethod.GET)
-    public ResponseEntity<Map<String, Object>> getAll (@RequestParam(name = "start") Integer start, @RequestParam(name = "size") Integer size,
-                                                          @RequestParam(name = "sort") Optional<String> sort,@RequestParam(name = "sortBy") Optional<String> sortBy,
-                                                          @RequestParam(name = "nama") Optional<String> nama,@RequestParam(name = "kodePembina") Optional<String> kodePembina,
-                                                          @RequestParam(name = "kota") Optional<String> kota,
-                                                          Authentication authentication) {
+    public ResponseEntity<Map<String, Object>> getAll (PembinaReqObj pembinaReqObj, HttpServletRequest request) {
         HashMap response = new HashMap<String,Object>();
-        Page<Pembina> pembinaPage =pembinaService.getAll(start,size,sort.orElse("asc"),sortBy.orElse("id"),nama.orElse(null),kodePembina.orElse(null),kota.orElse(null));
+        Page<Pembina> pembinaPage = null;
+        pembinaPage =pembinaService.getAll(pembinaReqObj);
         response.put("message","Get Detail Success");
         response.put("data",pembinaPage);
         return new ResponseEntity<>(response, HttpStatus.OK);

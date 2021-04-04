@@ -1,13 +1,20 @@
 package com.bpjsk.monitor.service;
 
+import com.bpjsk.monitor.model.Pembina;
+import com.bpjsk.monitor.model.Perusahaan;
 import com.bpjsk.monitor.model.Surat;
+import com.bpjsk.monitor.repository.PembinaRepository;
+import com.bpjsk.monitor.repository.PerusahaanRepository;
 import com.bpjsk.monitor.repository.SuratRepository;
 import com.bpjsk.monitor.requestobject.SuratReqObj;
+import com.bpjsk.monitor.specification.PerusahaanSpecification;
+import com.bpjsk.monitor.specification.SuratSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,21 +22,39 @@ public class SuratService {
 
     @Autowired
     SuratRepository suratRepository;
-    public Page<Surat> getAll(Integer start, Integer size, String sort, String sortBy, String kodeSurat, String judulSurat, String namaPerusahaan, String npp, String namaPengirim, String tanggalStart, String tanggalEnd) {
-        Pageable pageable = PageRequest.of(start,size, sort.isEmpty() || sort.equalsIgnoreCase("asc")? Sort.Direction.ASC : Sort.Direction.DESC, sortBy.isEmpty()?"id":sortBy);
-        Page<Surat> suratPage = suratRepository.findAll(pageable);
-        return  suratPage;
-    }
 
-    public Page<Surat> getAll(SuratReqObj suratReqObj) {
+    @Autowired
+    PembinaRepository pembinaRepository;
+
+    @Autowired
+    PerusahaanRepository perusahaanRepository;
+
+    public Page<Surat> getAll(SuratReqObj suratReqObj, String nikUser) {
         Sort.Direction sort = Sort.Direction.ASC;
         if (suratReqObj.getSort()!=null){
             if (suratReqObj.getSort().equalsIgnoreCase("DESC")){
                 sort = Sort.Direction.DESC;
             }
         }
-        Pageable pageable = PageRequest.of(suratReqObj.getPage()!=null? suratReqObj.getPage() : 0,suratReqObj.getSize()!=null? suratReqObj.getSize() : 0);
-        Page<Surat> suratPage = suratRepository.findAll(pageable);
+        Pageable pageable = PageRequest.of(suratReqObj.getPage()!=null? suratReqObj.getPage() : 0,suratReqObj.getSize()!=null? suratReqObj.getSize() : 0,sort,suratReqObj.getSortBy());
+        Pembina pembina = null;
+        if(nikUser!=null){
+            pembina = pembinaRepository.findByNik(nikUser);
+        }
+        Specification<Surat> specification = Specification.where(null);
+        if (pembina!=null){
+            specification = specification.and(new SuratSpecification("kodePembina","=",pembina.getKodePembina()));
+        }
+        Page<Surat> suratPage = suratRepository.findAll(specification,pageable);
         return  suratPage;
+    }
+
+    public void save(Surat surat) throws Exception {
+        Perusahaan perusahaan = perusahaanRepository.findByNpp(surat.getNpp());
+        if (perusahaan==null){
+            throw new Exception("Perusahaan not found");
+        }
+        surat.setNamaPerusahaan(perusahaan.getNama());
+        suratRepository.save(surat);
     }
 }

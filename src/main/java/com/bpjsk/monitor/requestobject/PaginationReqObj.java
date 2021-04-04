@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class PaginationReqObj {
-    protected Integer page;
-    protected Integer size;
+    protected Integer page =0;
+    protected Integer size=10;
     protected String sort;
     protected String sortBy;
 }

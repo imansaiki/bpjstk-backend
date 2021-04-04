@@ -37,14 +37,14 @@ public class UserAPI {
     }
     @RequestMapping(value="/detail", method= RequestMethod.GET)
     public ResponseEntity<Map<String, Object>> getDetail (Authentication authentication, Principal principal, HttpServletRequest request) {
-        //System.out.println(authentication.getPrincipal());
-        //System.out.println(authentication.getDetails());
-        //System.out.println(authentication.getCredentials());
-        //System.out.println(authentication.getAuthorities());
-        //System.out.println(authentication.getName());
-        //System.out.println(principal);
-        //System.out.println(request.isUserInRole("ROLE_ADMIN"));
-        //System.out.println(request.getUserPrincipal());
+        System.out.println(authentication.getPrincipal());
+        System.out.println(authentication.getDetails());
+        System.out.println(authentication.getCredentials());
+        System.out.println(authentication.getAuthorities());
+        System.out.println(authentication.getName());
+        System.out.println(principal);
+        System.out.println(request.isUserInRole("ROLE_ADMIN"));
+        System.out.println(request.getUserPrincipal().getName());
         HashMap response = new HashMap<String,Object>();
         response.put("message","Get Detail Success");
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -60,7 +60,7 @@ public class UserAPI {
             response.put("message","Register gagal, username telah digunakan");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }catch (Exception e){
-            response.put("message","Register gagal, terjadi kesalahan");
+            response.put("message",e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(response, HttpStatus.CREATED);

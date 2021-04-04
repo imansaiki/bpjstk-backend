@@ -29,6 +29,9 @@ public class Surat {
     @Column(name = "npp")
     private String npp;
 
+    @Column(name = "nama_perusahaan")
+    private String namaPerusahaan;
+
     @Column(name = "nama_pengirim")
     private String namaPengirim;
 
