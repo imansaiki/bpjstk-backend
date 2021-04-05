@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -43,6 +44,19 @@ public class SuratAPI {
     }
     @RequestMapping(value="/save", method= RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> save (Surat surat,
+                                                     HttpServletRequest request) {
+        HashMap response = new HashMap<String,Object>();
+        try {
+            suratService.save(surat);
+        } catch (Exception e) {
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
+        }
+        response.put("message","Submitted");
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+    @RequestMapping(value="/saveAll", method= RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> save (List<Surat> surat,
                                                      HttpServletRequest request) {
         HashMap response = new HashMap<String,Object>();
         try {
