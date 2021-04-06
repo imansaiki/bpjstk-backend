@@ -15,6 +15,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class PerusahaanService {
 
@@ -62,5 +65,14 @@ public class PerusahaanService {
             throw new Exception("Pembina not found");
         }
         perusahaanRepository.save(perusahaan);
+    }
+
+    public void save(List<Perusahaan> perusahaanList) {
+        List<Perusahaan> perusahaanList1 = new ArrayList<>();
+        for (Perusahaan perusahaan :perusahaanList){
+            perusahaan.setKodePembina(null);
+            perusahaanList1.add(perusahaan);
+        }
+        perusahaanRepository.saveAll(perusahaanList1);
     }
 }

@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -60,6 +61,21 @@ public class SuratService {
         suratRepository.save(surat);
     }
 
-    public void save(List<Surat> surat) {
+    public void save(List<Surat> surat) throws Exception {
+        List<String> listNpp=new ArrayList<>();
+        for (Surat surat1:surat){
+            listNpp.add(surat1.getNpp());
+        }
+        List<Perusahaan> perusahaanList = perusahaanRepository.findByNppIn(listNpp);
+        if (perusahaanList.size()!=listNpp.size()){
+            String listNppFail = "";
+            for (Perusahaan perusahaan :perusahaanList){
+                if(listNpp.contains(perusahaan.getNpp())){
+                    listNppFail.concat(perusahaan.getNpp()+",");
+                }
+            }
+            throw new Exception("Npp Tidak Valid :"+listNppFail);
+        }
+        suratRepository.saveAll(surat);
     }
 }
