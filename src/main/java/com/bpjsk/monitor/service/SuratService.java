@@ -19,6 +19,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Service
 public class SuratService {
@@ -39,12 +44,12 @@ public class SuratService {
                 sort = Sort.Direction.DESC;
             }
         }
-        Pageable pageable = PageRequest.of(suratReqObj.getPage()!=null? suratReqObj.getPage() : 0,suratReqObj.getSize()!=null? suratReqObj.getSize() : 0,sort,suratReqObj.getSortBy());
+        Pageable pageable = PageRequest.of(suratReqObj.getPage(),suratReqObj.getSize(),Sort.Direction.ASC, "id");
         Pembina pembina = null;
         if(nikUser!=null){
             pembina = pembinaRepository.findByNik(nikUser);
         }
-        Specification<Surat> specification = Specification.where(null);
+        Specification<Surat> specification = Specification.where(new SuratSpecification("isDeleted","=","0"));
         if (pembina!=null){
             specification = specification.and(new SuratSpecification("kodePembina","=",pembina.getKodePembina()));
         }
@@ -63,19 +68,40 @@ public class SuratService {
 
     public void save(List<Surat> surat) throws Exception {
         List<String> listNpp=new ArrayList<>();
-        for (Surat surat1:surat){
-            listNpp.add(surat1.getNpp());
+        List<Surat> suratDistinctNpp = surat.stream()
+                .filter(distinctByKey(p -> p.getNpp()))
+                .collect(Collectors.toList());
+        for (Surat nppSurat:suratDistinctNpp){
+            listNpp.add(nppSurat.getNpp());
         }
         List<Perusahaan> perusahaanList = perusahaanRepository.findByNppIn(listNpp);
         if (perusahaanList.size()!=listNpp.size()){
             String listNppFail = "";
             for (Perusahaan perusahaan :perusahaanList){
-                if(listNpp.contains(perusahaan.getNpp())){
+                if(-1==listNpp.indexOf(perusahaan.getNpp())){
                     listNppFail.concat(perusahaan.getNpp()+",");
                 }
             }
             throw new Exception("Npp Tidak Valid :"+listNppFail);
         }
-        suratRepository.saveAll(surat);
+        List<Surat> suratList = new ArrayList<>();
+        for(Surat surat1:surat){
+            Perusahaan perusahaan = findByNppIsIn(perusahaanList,surat1.getNpp());
+            surat1.setNamaPerusahaan(perusahaan.getNama());
+            suratList.add(surat1);
+        }
+        suratRepository.saveAll(suratList);
+    }
+
+
+    public static Perusahaan findByNppIsIn(List<Perusahaan> listPerusahaan, String npp) {
+        return listPerusahaan.stream().filter(perusahaan -> npp.equals(perusahaan.getNpp())).findFirst().orElse(null);
+    }
+
+    public static <T> Predicate<T> distinctByKey(
+            Function<? super T, ?> keyExtractor) {
+
+        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
 }

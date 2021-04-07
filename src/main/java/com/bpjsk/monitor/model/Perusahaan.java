@@ -47,6 +47,9 @@ public class Perusahaan {
     @Column(name = "updated_at")
     private Date updatedAt;
 
+    @Column(name = "is_deleted")
+    private Integer isDeleted=0;
+
     @PrePersist
     protected void onCreate() {
         createdAt = new Date();

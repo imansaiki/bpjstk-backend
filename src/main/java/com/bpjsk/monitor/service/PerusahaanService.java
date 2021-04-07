@@ -34,12 +34,12 @@ public class PerusahaanService {
                 sort = Sort.Direction.DESC;
             }
         }
-        Pageable pageable = PageRequest.of(0,10, Sort.Direction.ASC, "id");
+        Pageable pageable = PageRequest.of(perusahaanReqObj.getPage(),perusahaanReqObj.getSize(), Sort.Direction.ASC, "id");
         Pembina pembina = null;
         if(nikUser!=null){
             pembina = pembinaRepository.findByNik(nikUser);
         }
-        Specification<Perusahaan> specification = Specification.where(null);
+        Specification<Perusahaan> specification = Specification.where(new PerusahaanSpecification("isDeleted","=","0"));
         if (pembina!=null){
             specification = specification.and(new PerusahaanSpecification("kodePembina","=",pembina.getKodePembina()));
         }

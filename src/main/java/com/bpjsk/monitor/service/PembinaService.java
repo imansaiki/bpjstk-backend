@@ -17,16 +17,16 @@ public class PembinaService {
     @Autowired
     PembinaRepository pembinaRepository;
 
-    public Page<Pembina> getAll(PembinaReqObj pembinaReqObj) {
+    public Page<Pembina> getAll(PembinaReqObj pembinaReqObj, String nikUser) {
         Sort.Direction sort = Sort.Direction.ASC;
         if (pembinaReqObj.getSort()!=null){
             if (pembinaReqObj.getSort().equalsIgnoreCase("DESC")){
                 sort = Sort.Direction.DESC;
             }
         }
-        Pageable pageable = PageRequest.of(pembinaReqObj.getPage()!=null? pembinaReqObj.getPage() : 0,pembinaReqObj.getSize()!=null? pembinaReqObj.getSize() : 0,sort, pembinaReqObj.getSortBy());
+        Pageable pageable = PageRequest.of(pembinaReqObj.getPage(),pembinaReqObj.getSize(),Sort.Direction.ASC, "id");
 
-        Specification<Pembina> specification = Specification.where(null);
+        Specification<Pembina> specification = Specification.where(new PembinaSpecification("isDeleted","=","0"));
         if(pembinaReqObj.getKotaLk()!=null){
             specification= specification.and(new PembinaSpecification("kota","like", pembinaReqObj.getKotaLk()));
         }
