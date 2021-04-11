@@ -39,11 +39,11 @@ public class PerusahaanAPI {
         Page<Perusahaan> perusahaanPage = null;
         if (request.isUserInRole("ROLE_ADMIN")){
             perusahaanPage = perusahaanService.getAll(perusahaanReqObj, null);
-            log.info(perusahaanReqObj.getPage()+" "+perusahaanReqObj.getSize()+" admin");
+            //log.info(perusahaanReqObj.getPage()+" "+perusahaanReqObj.getSize()+" admin");
         }
         if (request.isUserInRole("ROLE_PEMBINA")){
             perusahaanPage = perusahaanService.getAll(perusahaanReqObj,request.getUserPrincipal().getName());
-            log.info(perusahaanReqObj.getPage()+" "+perusahaanReqObj.getSize()+" pembina");
+            //log.info(perusahaanReqObj.getPage()+" "+perusahaanReqObj.getSize()+" pembina");
         }
 
         response.put("data",perusahaanPage);
@@ -51,7 +51,7 @@ public class PerusahaanAPI {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @RequestMapping(value="/save", method= RequestMethod.POST)
-    public ResponseEntity<Map<String, Object>> save (Perusahaan perusahaan,
+    public ResponseEntity<Map<String, Object>> save (@RequestBody Perusahaan perusahaan,
                                                        HttpServletRequest request) {
         HashMap response = new HashMap<String,Object>();
         try {

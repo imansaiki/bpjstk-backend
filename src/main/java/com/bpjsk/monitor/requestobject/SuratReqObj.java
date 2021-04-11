@@ -16,4 +16,5 @@ public class SuratReqObj extends PaginationReqObj{
     private String judulSuratLk;
     private String tanggalStart;
     private String tanggalEnd;
+    private String namaPerusahaanLk;
 }

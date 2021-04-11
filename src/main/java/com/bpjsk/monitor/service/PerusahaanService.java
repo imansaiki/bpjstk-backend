@@ -49,20 +49,27 @@ public class PerusahaanService {
         if (perusahaanReqObj.getKotaLk()!=null){
             specification = specification.and(new PerusahaanSpecification("kota","like",perusahaanReqObj.getKotaLk()));
         }
+        if (perusahaanReqObj.getKodePembinaLk()!=null){
+            specification = specification.and(new PerusahaanSpecification("kodePembina","like",perusahaanReqObj.getKodePembinaLk()));
+        }
         if (perusahaanReqObj.getNppLk()!=null){
             specification = specification.and(new PerusahaanSpecification("npp","like",perusahaanReqObj.getNppLk()));
+        }
+        if (perusahaanReqObj.getNppEq()!=null){
+            specification = specification.and(new PerusahaanSpecification("npp","=",perusahaanReqObj.getNppEq()));
         }
         return perusahaanRepository.findAll(specification,pageable);
     }
 
     public void save(Perusahaan perusahaan) throws Exception {
         Pembina pembina = null;
-        if(perusahaan.getKodePembina()!=null){
+        Boolean useCode = false;
+        if(perusahaan.getKodePembina()!=null&&!perusahaan.getKodePembina().isEmpty()){
+            useCode=true;
             pembina= pembinaRepository.findByKodePembina(perusahaan.getKodePembina());
         }
-
-        if (pembina==null){
-            throw new Exception("Pembina not found");
+        if (pembina==null&& useCode==true){
+            throw new Exception("Kode Pembina Tidak Ditemukan");
         }
         perusahaanRepository.save(perusahaan);
     }

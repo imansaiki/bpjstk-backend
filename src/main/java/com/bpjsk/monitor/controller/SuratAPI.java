@@ -49,7 +49,7 @@ public class SuratAPI {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @RequestMapping(value="/save", method= RequestMethod.POST)
-    public ResponseEntity<Map<String, Object>> save (Surat surat,
+    public ResponseEntity<Map<String, Object>> save (@RequestBody Surat surat,
                                                      HttpServletRequest request) {
         HashMap response = new HashMap<String,Object>();
         try {

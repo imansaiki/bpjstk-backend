@@ -19,6 +19,7 @@ public class PembinaSpecification implements Specification<Pembina> {
         queryBuilderCriteria.setField(field);
         queryBuilderCriteria.setOperator(operator);
         queryBuilderCriteria.setValue(value);
+        this.criteria=queryBuilderCriteria;
     }
 
     @Override
@@ -56,14 +57,12 @@ public class PembinaSpecification implements Specification<Pembina> {
                 } else if (criteria.getOperator().equalsIgnoreCase("=")) {
                     return criteriaBuilder.equal(root.get(criteria.getField()), criteria.getValue());
                 } else if (criteria.getOperator().equalsIgnoreCase("like")) {
-                    return criteriaBuilder.like(root.get(criteria.getField()), "%" + criteria.getValue() + "%");
+                    return criteriaBuilder.like(criteriaBuilder.upper(root.get(criteria.getField())),
+                            "%" + criteria.getValue().toUpperCase() + "%");
                 } else if (criteria.getOperator().equalsIgnoreCase("!like")) {
-                    return criteriaBuilder.notLike(root.get(criteria.getField()), "%" + criteria.getValue() + "%");
-                } else if (criteria.getOperator().equalsIgnoreCase("in")) {
-                    return criteriaBuilder.like(root.get(criteria.getField()), "%" + criteria.getValue() + "%");
-                } else if (criteria.getOperator().equalsIgnoreCase("!in")) {
-                    return criteriaBuilder.notLike(root.get(criteria.getField()), "%" + criteria.getValue() + "%");
-                } else if (criteria.getOperator().equalsIgnoreCase("start")) {
+                    return criteriaBuilder.notLike(criteriaBuilder.upper(root.get(criteria.getField())),
+                            "%" + criteria.getValue().toUpperCase() + "%");
+                }else if (criteria.getOperator().equalsIgnoreCase("start")) {
                     return criteriaBuilder.like(root.get(criteria.getField()),  criteria.getValue() + "%");
                 } else if (criteria.getOperator().equalsIgnoreCase("end")) {
                     return criteriaBuilder.like(root.get(criteria.getField()),  "%" + criteria.getValue());

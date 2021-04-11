@@ -48,7 +48,7 @@ public class Perusahaan {
     private Date updatedAt;
 
     @Column(name = "is_deleted")
-    private Integer isDeleted=0;
+    private Integer isDeleted=0 ;
 
     @PrePersist
     protected void onCreate() {

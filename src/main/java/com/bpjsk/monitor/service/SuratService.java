@@ -53,6 +53,24 @@ public class SuratService {
         if (pembina!=null){
             specification = specification.and(new SuratSpecification("kodePembina","=",pembina.getKodePembina()));
         }
+        if (suratReqObj.getNppEq()!=null){
+            specification = specification.and(new SuratSpecification("npp","=",suratReqObj.getNppEq()));
+        }
+        if (suratReqObj.getNamaPerusahaanLk()!=null){
+            specification = specification.and(new SuratSpecification("namaPerusahaan","like",suratReqObj.getNamaPerusahaanLk()));
+        }
+        if (suratReqObj.getJudulSuratLk()!=null){
+            specification = specification.and(new SuratSpecification("judulSurat","like",suratReqObj.getJudulSuratEq()));
+        }
+        if (suratReqObj.getKodeSuratLk()!=null){
+            specification = specification.and(new SuratSpecification("kodeSurat","like",suratReqObj.getKodeSuratLk()));
+        }
+        if (suratReqObj.getTanggalStart()!=null){
+            specification = specification.and(new SuratSpecification("tanggalSurat",">=",suratReqObj.getTanggalStart()));
+        }
+        if (suratReqObj.getTanggalEnd()!=null){
+            specification = specification.and(new SuratSpecification("tanggalSurat","<=",suratReqObj.getTanggalEnd()));
+        }
         Page<Surat> suratPage = suratRepository.findAll(specification,pageable);
         return  suratPage;
     }

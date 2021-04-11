@@ -9,4 +9,5 @@ public class PerusahaanReqObj extends PaginationReqObj{
     private String namaLk;
     private String kotaLk;
     private String kodePembinaEq;
+    private String kodePembinaLk;
 }
