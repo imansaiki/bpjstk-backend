@@ -29,6 +29,28 @@ public class Surat {
     @Column(name = "npp")
     private String npp;
 
+    @Column(name = "nama_perusahaan")
+    private String namaPerusahaan;
+
     @Column(name = "nama_pengirim")
     private String namaPengirim;
+
+    @Column(name = "created_at")
+    private Date createdAt;
+
+    @Column(name = "updated_at")
+    private Date updatedAt;
+
+    @Column(name = "is_deleted")
+    private Integer isDeleted=0;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = new Date();
+    }
 }

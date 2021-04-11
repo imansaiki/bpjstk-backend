@@ -3,6 +3,7 @@ package com.bpjsk.monitor.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -20,14 +21,27 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "level")
-    private String level;
-
     @Column(name = "is_active")
     private Integer isActive;
 
     @ManyToOne()
     @JoinColumn(name="role_id", referencedColumnName = "role_id")
     private UserRole role;
+
+    @Column(name = "created_at")
+    private Date createdAt;
+
+    @Column(name = "updated_at")
+    private Date updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = new Date();
+    }
 
 }
