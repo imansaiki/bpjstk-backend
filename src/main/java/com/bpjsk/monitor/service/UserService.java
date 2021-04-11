@@ -44,7 +44,7 @@ public class UserService implements UserDetailsService {
         return new UserPrincipal(user);
     }
 
-    public void registerPembina(RegisterObject registerObject) throws Exception {
+    public void registerAdmin(RegisterObject registerObject) throws Exception {
         if (registerObject.getUsername()==null||
                 registerObject.getPassword()==null
         ){
@@ -56,7 +56,7 @@ public class UserService implements UserDetailsService {
         userRepository.save(registerObject.getUser());
         //pembinaRepository.save(registerObject.getPembina());
     }
-    public void registerAdmin(RegisterObject registerObject) throws Exception {
+    public void registerPembina(RegisterObject registerObject) throws Exception {
         if (
                 registerObject.getNik()==null||
                 registerObject.getPassword()==null||
