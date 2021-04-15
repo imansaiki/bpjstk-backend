@@ -17,6 +17,7 @@ public class RegisterObject {
     private Integer isActive;
     private Integer roleId;
     private String nip;
+    private Long idPembina;
     private String kodePembina;
     private String nama;
     private String alamat;
@@ -36,6 +37,7 @@ public class RegisterObject {
     }
     public Pembina getPembina(){
         Pembina pembina = new Pembina();
+        pembina.setId(this.idPembina);
         pembina.setNama(this.nama);
         pembina.setEmail(this.email);
         pembina.setAlamat(this.alamat);

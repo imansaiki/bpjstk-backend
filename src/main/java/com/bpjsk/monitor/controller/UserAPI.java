@@ -2,9 +2,11 @@ package com.bpjsk.monitor.controller;
 
 import com.bpjsk.monitor.dto.LoginResponseDetailDTO;
 import com.bpjsk.monitor.dto.RegisterObject;
+import com.bpjsk.monitor.exception.CustomException;
 import com.bpjsk.monitor.model.Pembina;
 import com.bpjsk.monitor.model.User;
 import com.bpjsk.monitor.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Controller
+@Slf4j
 @RequestMapping(path="/user")
 public class UserAPI {
     @Autowired
@@ -56,11 +59,17 @@ public class UserAPI {
         response.put("message","Register Success");
         try {
             userService.registerPembina(registerObject);
+        }catch (CustomException e){
+            response.put("message",e.getMessage());
+            log.error(e.getOriginalException().getMessage());
+            return new ResponseEntity<>(response, e.getHttpStatus());
         }catch (DataIntegrityViolationException e){
-            response.put("message","Register gagal, username telah digunakan");
+            response.put("message","Terdapat kesalahan saat memasukan data");
+            log.error(e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }catch (Exception e){
             response.put("message",e.getMessage());
+            log.error(e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -71,11 +80,17 @@ public class UserAPI {
         response.put("message","Register Success");
         try {
             userService.registerAdmin(registerObject);
+        }catch (CustomException e){
+            response.put("message",e.getMessage());
+            log.error(e.getMessage());
+            return new ResponseEntity<>(response, e.getHttpStatus());
         }catch (DataIntegrityViolationException e){
-            response.put("message","Register gagal, username telah digunakan");
+            response.put("message","Terdapat error saat memasukan data");
+            log.error(e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }catch (Exception e){
             response.put("message",e.getMessage());
+            log.error(e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(response, HttpStatus.CREATED);
