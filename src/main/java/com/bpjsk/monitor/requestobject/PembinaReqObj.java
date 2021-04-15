@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class PembinaReqObj extends PaginationReqObj{
-    private String nikLk;
-    private String nikEq;
+    private String nipLk;
+    private String nipEq;
     private String namaLk;
     private String kodePembinaEq;
     private String kodePembinaLk;

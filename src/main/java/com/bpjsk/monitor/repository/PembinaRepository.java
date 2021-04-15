@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PembinaRepository extends JpaRepository<Pembina,Long> {
 
-    Pembina findByNik(String username);
+    Pembina findByNip(String username);
 
     Page<Pembina> findAll(Specification<Pembina> specification, Pageable pageable);
 

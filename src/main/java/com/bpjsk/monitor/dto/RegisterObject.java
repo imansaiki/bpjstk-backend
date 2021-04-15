@@ -16,7 +16,7 @@ public class RegisterObject {
     private String password;
     private Integer isActive;
     private Integer roleId;
-    private String nik;
+    private String nip;
     private String kodePembina;
     private String nama;
     private String alamat;
@@ -41,7 +41,7 @@ public class RegisterObject {
         pembina.setAlamat(this.alamat);
         pembina.setKodePembina(this.kodePembina);
         pembina.setKota(this.kota);
-        pembina.setNik(this.nik);
+        pembina.setNip(this.nip);
         pembina.setTelepon(this.telepon);
         return pembina;
     }

@@ -14,8 +14,8 @@ public class Pembina {
     @Column
     private long id;
 
-    @Column(unique=true,name = "nik")
-    private String nik;
+    @Column(unique=true,name = "nip")
+    private String nip;
 
     @Column(unique=true,name = "kode_pembina")
     private String kodePembina;

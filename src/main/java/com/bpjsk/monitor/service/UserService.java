@@ -58,16 +58,15 @@ public class UserService implements UserDetailsService {
     }
     public void registerPembina(RegisterObject registerObject) throws Exception {
         if (
-                registerObject.getNik()==null||
-                registerObject.getPassword()==null||
-                registerObject.getNama()==null
+                registerObject.getNip()==null|| registerObject.getPassword()==null||
+                registerObject.getNama()==null|| registerObject.getKodePembina()==null
         ){
             throw new Exception("Lengkapi field yang diminta");
         }
         String password = passwordEncoder.encode(registerObject.getPassword());
         registerObject.setPassword(password);
         registerObject.setRoleId(2);
-        registerObject.setUsername(registerObject.getNik());
+        registerObject.setUsername(registerObject.getNip());
         userRepository.save(registerObject.getUser());
         pembinaRepository.save(registerObject.getPembina());
     }
@@ -75,7 +74,7 @@ public class UserService implements UserDetailsService {
         Authentication auth = new UsernamePasswordAuthenticationToken(username,password);
         authenticationManager.authenticate(auth);
         User user = userRepository.findByUsername(username);
-        Pembina pembina = pembinaRepository.findByNik(username);
+        Pembina pembina = pembinaRepository.findByNip(username);
         String originalInput = username+":"+password;
         String encodedString = Base64.getEncoder().encodeToString(originalInput.getBytes());
         LoginResponseDetailDTO loginResponseDetailDTO = new LoginResponseDetailDTO();
