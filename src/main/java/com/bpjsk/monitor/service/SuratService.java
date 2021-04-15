@@ -7,7 +7,6 @@ import com.bpjsk.monitor.repository.PembinaRepository;
 import com.bpjsk.monitor.repository.PerusahaanRepository;
 import com.bpjsk.monitor.repository.SuratRepository;
 import com.bpjsk.monitor.requestobject.SuratReqObj;
-import com.bpjsk.monitor.specification.PerusahaanSpecification;
 import com.bpjsk.monitor.specification.SuratSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -47,7 +46,7 @@ public class SuratService {
         Pageable pageable = PageRequest.of(suratReqObj.getPage(),suratReqObj.getSize(),Sort.Direction.ASC, "id");
         Pembina pembina = null;
         if(nikUser!=null){
-            pembina = pembinaRepository.findByNik(nikUser);
+            pembina = pembinaRepository.findByNip(nikUser);
         }
         Specification<Surat> specification = Specification.where(new SuratSpecification("isDeleted","=","0"));
         if (pembina!=null){

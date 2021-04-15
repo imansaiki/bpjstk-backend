@@ -30,8 +30,8 @@ public class PembinaService {
         if(pembinaReqObj.getKotaLk()!=null){
             specification= specification.and(new PembinaSpecification("kota","like", pembinaReqObj.getKotaLk()));
         }
-        if(pembinaReqObj.getNikLk()!=null){
-            specification= specification.and(new PembinaSpecification("nik","like", pembinaReqObj.getNikLk()));
+        if(pembinaReqObj.getNipLk()!=null){
+            specification= specification.and(new PembinaSpecification("nip","like", pembinaReqObj.getNipLk()));
         }
         if(pembinaReqObj.getKodePembinaLk()!=null){
             specification= specification.and(new PembinaSpecification("kodePembina","like", pembinaReqObj.getKodePembinaLk()));

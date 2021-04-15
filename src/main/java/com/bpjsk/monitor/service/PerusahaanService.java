@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +36,7 @@ public class PerusahaanService {
         Pageable pageable = PageRequest.of(perusahaanReqObj.getPage(),perusahaanReqObj.getSize(), Sort.Direction.ASC, "id");
         Pembina pembina = null;
         if(nikUser!=null){
-            pembina = pembinaRepository.findByNik(nikUser);
+            pembina = pembinaRepository.findByNip(nikUser);
         }
         Specification<Perusahaan> specification = Specification.where(new PerusahaanSpecification("isDeleted","=","0"));
         if (pembina!=null){
