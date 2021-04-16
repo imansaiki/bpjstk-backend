@@ -15,4 +15,6 @@ public interface PerusahaanRepository extends JpaRepository<Perusahaan,Long> {
     Perusahaan findByNpp(String npp);
 
     List<Perusahaan> findByNppIn(List<String> listNpp);
+
+    List<Perusahaan> findByKodePembina(String kodePembina);
 }

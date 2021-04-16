@@ -29,6 +29,33 @@ public class PerusahaanService {
     @Autowired
     PembinaRepository pembinaRepository;
 
+    public Page<Perusahaan> getAll(PerusahaanReqObj perusahaanReqObj) {
+        Sort.Direction sort = Sort.Direction.ASC;
+        if (perusahaanReqObj.getSort()!=null){
+            if (perusahaanReqObj.getSort().equalsIgnoreCase("DESC")){
+                sort = Sort.Direction.DESC;
+            }
+        }
+        Pageable pageable = PageRequest.of(perusahaanReqObj.getPage(),perusahaanReqObj.getSize(), Sort.Direction.ASC, "id");
+        Specification<Perusahaan> specification = Specification.where(new PerusahaanSpecification("isDeleted","=","0"));
+        if (perusahaanReqObj.getNamaLk()!=null){
+            specification = specification.and(new PerusahaanSpecification("nama","like",perusahaanReqObj.getNamaLk()));
+        }
+        if (perusahaanReqObj.getKotaLk()!=null){
+            specification = specification.and(new PerusahaanSpecification("kota","like",perusahaanReqObj.getKotaLk()));
+        }
+        if (perusahaanReqObj.getKodePembinaLk()!=null){
+            specification = specification.and(new PerusahaanSpecification("kodePembina","like",perusahaanReqObj.getKodePembinaLk()));
+        }
+        if (perusahaanReqObj.getNppLk()!=null){
+            specification = specification.and(new PerusahaanSpecification("npp","like",perusahaanReqObj.getNppLk()));
+        }
+        if (perusahaanReqObj.getNppEq()!=null){
+            specification = specification.and(new PerusahaanSpecification("npp","=",perusahaanReqObj.getNppEq()));
+        }
+        return perusahaanRepository.findAll(specification,pageable);
+    }
+
     public Page<Perusahaan> getAll(PerusahaanReqObj perusahaanReqObj, String nikUser) {
         Sort.Direction sort = Sort.Direction.ASC;
         if (perusahaanReqObj.getSort()!=null){
