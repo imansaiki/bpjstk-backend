@@ -15,7 +15,7 @@ public class RegisterObject {
     private String username;
     private String password;
     private Integer isActive;
-    private Integer roleId;
+    private Long roleId;
     private String nip;
     private Long idPembina;
     private String kodePembina;

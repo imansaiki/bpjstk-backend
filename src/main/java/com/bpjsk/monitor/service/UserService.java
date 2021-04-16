@@ -56,7 +56,7 @@ public class UserService implements UserDetailsService {
         }
         String password = passwordEncoder.encode(registerObject.getPassword());
         registerObject.setPassword(password);
-        registerObject.setRoleId(1);
+        registerObject.setRoleId((long) 1);
         userRepository.save(registerObject.getUser());
         //pembinaRepository.save(registerObject.getPembina());
     }
@@ -70,7 +70,7 @@ public class UserService implements UserDetailsService {
         }
         String password = passwordEncoder.encode(registerObject.getPassword());
         registerObject.setPassword(password);
-        registerObject.setRoleId(2);
+        registerObject.setRoleId((long) 2);
         registerObject.setUsername(registerObject.getNip());
         Pembina pembina = null;
         try {

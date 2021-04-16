@@ -1,5 +1,6 @@
 package com.bpjsk.monitor.service;
 
+import com.bpjsk.monitor.exception.CustomException;
 import com.bpjsk.monitor.model.Pembina;
 import com.bpjsk.monitor.model.Perusahaan;
 import com.bpjsk.monitor.model.Surat;
@@ -14,7 +15,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +77,7 @@ public class SuratService {
         return  suratPage;
     }
 
+    @Transactional
     public void save(Surat surat) throws Exception {
         Perusahaan perusahaan = perusahaanRepository.findByNpp(surat.getNpp());
         if (perusahaan==null){
@@ -83,6 +87,7 @@ public class SuratService {
         suratRepository.save(surat);
     }
 
+    @Transactional
     public void save(List<Surat> surat) throws Exception {
         List<String> listNpp=new ArrayList<>();
         List<Surat> suratDistinctNpp = surat.stream()
@@ -110,6 +115,17 @@ public class SuratService {
         suratRepository.saveAll(suratList);
     }
 
+    @Transactional
+    public Surat deleteSurat(Long id) throws Exception {
+        Surat surat = suratRepository.findById(id).orElse(null);
+        if(surat==null){
+            throw new CustomException("Delete Request id Not Valid", HttpStatus.BAD_REQUEST);
+        }
+        surat.setIsDeleted(1);
+        suratRepository.save(surat);
+        return surat;
+    }
+
 
     public static Perusahaan findByNppIsIn(List<Perusahaan> listPerusahaan, String npp) {
         return listPerusahaan.stream().filter(perusahaan -> npp.equals(perusahaan.getNpp())).findFirst().orElse(null);
@@ -121,4 +137,6 @@ public class SuratService {
         Map<Object, Boolean> seen = new ConcurrentHashMap<>();
         return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
+
+
 }
