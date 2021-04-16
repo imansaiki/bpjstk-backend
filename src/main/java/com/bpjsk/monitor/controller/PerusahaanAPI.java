@@ -40,7 +40,7 @@ public class PerusahaanAPI {
         HashMap response = new HashMap<String,Object>();
         Page<Perusahaan> perusahaanPage = null;
         if (request.isUserInRole("ROLE_ADMIN")){
-            perusahaanPage = perusahaanService.getAll(perusahaanReqObj, null);
+            perusahaanPage = perusahaanService.getAll(perusahaanReqObj);
             //log.info(perusahaanReqObj.getPage()+" "+perusahaanReqObj.getSize()+" admin");
         }
         if (request.isUserInRole("ROLE_PEMBINA")){

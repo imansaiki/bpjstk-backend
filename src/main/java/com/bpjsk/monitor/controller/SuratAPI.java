@@ -39,7 +39,7 @@ public class SuratAPI {
         HashMap response = new HashMap<String,Object>();
         Page<Surat> suratPage = null;
         if (request.isUserInRole("ROLE_ADMIN")){
-            suratPage = suratService.getAll(suratReqObj, null);
+            suratPage = suratService.getAll(suratReqObj);
             log.info(suratReqObj.getPage()+" "+suratReqObj.getSize()+" admin");
         }
         if(request.isUserInRole("ROLE_PEMBINA")){

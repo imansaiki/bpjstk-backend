@@ -39,7 +39,7 @@ public class SuratService {
     @Autowired
     PerusahaanRepository perusahaanRepository;
 
-    public Page<Surat> getAll(SuratReqObj suratReqObj, String nikUser) {
+    public Page<Surat> getAll(SuratReqObj suratReqObj) {
         Sort.Direction sort = Sort.Direction.ASC;
         if (suratReqObj.getSort()!=null){
             if (suratReqObj.getSort().equalsIgnoreCase("DESC")){
@@ -47,14 +47,7 @@ public class SuratService {
             }
         }
         Pageable pageable = PageRequest.of(suratReqObj.getPage(),suratReqObj.getSize(),Sort.Direction.ASC, "id");
-        Pembina pembina = null;
-        if(nikUser!=null){
-            pembina = pembinaRepository.findByNip(nikUser);
-        }
         Specification<Surat> specification = Specification.where(new SuratSpecification("isDeleted","=","0"));
-        if (pembina!=null){
-            specification = specification.and(new SuratSpecification("kodePembina","=",pembina.getKodePembina()));
-        }
         if (suratReqObj.getNppEq()!=null){
             specification = specification.and(new SuratSpecification("npp","=",suratReqObj.getNppEq()));
         }
@@ -74,6 +67,54 @@ public class SuratService {
             specification = specification.and(new SuratSpecification("tanggalSurat","<=",suratReqObj.getTanggalEnd()));
         }
         Page<Surat> suratPage = suratRepository.findAll(specification,pageable);
+        return  suratPage;
+    }
+
+    public Page<Surat> getAll(SuratReqObj suratReqObj, String nikUser) {
+        Sort.Direction sort = Sort.Direction.ASC;
+        if (suratReqObj.getSort()!=null){
+            if (suratReqObj.getSort().equalsIgnoreCase("DESC")){
+                sort = Sort.Direction.DESC;
+            }
+        }
+        Pageable pageable = PageRequest.of(suratReqObj.getPage(),suratReqObj.getSize(),Sort.Direction.ASC, "id");
+        Pembina pembina = null;
+        List<Perusahaan> perusahaanList = null;
+        Page<Surat> suratPage= Page.empty();
+        Specification<Surat> specification = Specification.where(new SuratSpecification("isDeleted","=","0"));
+        if(nikUser!=null){
+            pembina = pembinaRepository.findByNip(nikUser);
+        }
+        if (pembina!=null){
+            perusahaanList=perusahaanRepository.findByKodePembina(pembina.getKodePembina());
+        }
+        if(perusahaanList.size()==0){
+            return suratPage;
+        }
+        Specification<Surat> specificationPembina = Specification.where(null);
+        for (Perusahaan perusahaan:perusahaanList){
+            specificationPembina = specificationPembina.or(new SuratSpecification("npp","=", perusahaan.getNpp()));
+        }
+        if (suratReqObj.getNppEq()!=null){
+            specification = specification.and(new SuratSpecification("npp","=",suratReqObj.getNppEq()));
+        }
+        if (suratReqObj.getNamaPerusahaanLk()!=null){
+            specification = specification.and(new SuratSpecification("namaPerusahaan","like",suratReqObj.getNamaPerusahaanLk()));
+        }
+        if (suratReqObj.getJudulSuratLk()!=null){
+            specification = specification.and(new SuratSpecification("judulSurat","like",suratReqObj.getJudulSuratEq()));
+        }
+        if (suratReqObj.getKodeSuratLk()!=null){
+            specification = specification.and(new SuratSpecification("kodeSurat","like",suratReqObj.getKodeSuratLk()));
+        }
+        if (suratReqObj.getTanggalStart()!=null){
+            specification = specification.and(new SuratSpecification("tanggalSurat",">=",suratReqObj.getTanggalStart()));
+        }
+        if (suratReqObj.getTanggalEnd()!=null){
+            specification = specification.and(new SuratSpecification("tanggalSurat","<=",suratReqObj.getTanggalEnd()));
+        }
+        specification = specification.and(specificationPembina);
+        suratPage = suratRepository.findAll(specification,pageable);
         return  suratPage;
     }
 
