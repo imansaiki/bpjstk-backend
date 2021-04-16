@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +44,9 @@ public class PembinaAPI {
         response.put("data",pembinaPage);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
     @RequestMapping(value="/delete", method= RequestMethod.POST)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, Object>> getAll (@RequestBody Pembina pembina, HttpServletRequest request) {
         HashMap response = new HashMap<String,Object>();
         Pembina deletedPembina = null;

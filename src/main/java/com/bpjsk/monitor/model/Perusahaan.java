@@ -12,7 +12,7 @@ public class Perusahaan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private long id;
+    private Long id;
 
     @Column(unique=true,name = "npp")
     private String npp;

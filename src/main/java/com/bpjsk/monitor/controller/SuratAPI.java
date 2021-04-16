@@ -1,5 +1,6 @@
 package com.bpjsk.monitor.controller;
 
+import com.bpjsk.monitor.exception.CustomException;
 import com.bpjsk.monitor.model.Pembina;
 import com.bpjsk.monitor.model.Perusahaan;
 import com.bpjsk.monitor.model.Surat;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,7 +50,9 @@ public class SuratAPI {
         response.put("message","Get Detail Success");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
     @RequestMapping(value="/save", method= RequestMethod.POST)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, Object>> save (@RequestBody Surat surat,
                                                      HttpServletRequest request) {
         HashMap response = new HashMap<String,Object>();
@@ -62,6 +66,7 @@ public class SuratAPI {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
     @RequestMapping(value="/saveAll", method= RequestMethod.POST)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, Object>> save (@RequestBody List<Surat> surat,
                                                      HttpServletRequest request) {
         HashMap response = new HashMap<String,Object>();
@@ -73,5 +78,26 @@ public class SuratAPI {
         }
         response.put("message","Submitted");
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value="/delete", method= RequestMethod.POST)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Map<String, Object>> deleteSurat(@RequestBody Surat surat, HttpServletRequest request) {
+        HashMap response = new HashMap<String,Object>();
+        Surat deleted = null;
+        if (surat.getId()!=null){
+            try {
+                deleted  = suratService.deleteSurat(surat.getId());
+            }catch (CustomException e){
+                response.put("message",e.getMessage());
+                return new ResponseEntity<>(response, e.getHttpStatus());
+            }catch (Exception e){
+                response.put("message",e.getMessage());
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+        }
+        response.put("message","Delete surat Success");
+        response.put("data",deleted);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

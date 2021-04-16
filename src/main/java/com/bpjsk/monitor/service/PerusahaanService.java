@@ -1,5 +1,6 @@
 package com.bpjsk.monitor.service;
 
+import com.bpjsk.monitor.exception.CustomException;
 import com.bpjsk.monitor.model.Pembina;
 import com.bpjsk.monitor.model.Perusahaan;
 import com.bpjsk.monitor.repository.PembinaRepository;
@@ -12,7 +13,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +63,7 @@ public class PerusahaanService {
         return perusahaanRepository.findAll(specification,pageable);
     }
 
+    @Transactional
     public void save(Perusahaan perusahaan) throws Exception {
         Pembina pembina = null;
         Boolean useCode = false;
@@ -73,6 +77,7 @@ public class PerusahaanService {
         perusahaanRepository.save(perusahaan);
     }
 
+    @Transactional
     public void save(List<Perusahaan> perusahaanList) {
         List<Perusahaan> perusahaanList1 = new ArrayList<>();
         for (Perusahaan perusahaan :perusahaanList){
@@ -80,5 +85,16 @@ public class PerusahaanService {
             perusahaanList1.add(perusahaan);
         }
         perusahaanRepository.saveAll(perusahaanList1);
+    }
+
+    @Transactional
+    public Perusahaan deletePerusahaan(Long id) throws Exception {
+        Perusahaan perusahaan = perusahaanRepository.findById(id).orElse(null);
+        if(perusahaan==null){
+            throw new CustomException("Delete Request id Not Valid", HttpStatus.BAD_REQUEST);
+        }
+        perusahaan.setIsDeleted(1);
+        perusahaanRepository.save(perusahaan);
+        return perusahaan;
     }
 }
